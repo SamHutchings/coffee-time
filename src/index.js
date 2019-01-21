@@ -1,4 +1,4 @@
-import Alexa from 'ask-sdk-core';
+const Alexa = require('ask-sdk-core');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -41,6 +41,8 @@ const ErrorHandler = {
     },
 
 }
+
+const skillBuilder = Alexa.SkillBuilders.custom();
 
 exports.handler = async (event, context) => {
     skillBuilder
