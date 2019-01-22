@@ -19,15 +19,20 @@ const BrewIntentHandler = {
         return request.type === 'IntentRequest'
             && request.intent.name === 'BrewIntent';
     },
-    handle(handlerInput) {
+    async handle(handlerInput) {
+        let method = handlerInput.requestEnvelope.request.intent.slots.method;
+
         console.log(`Brew request received for ${method.value}`);
 
-        var method = handlerInput.requestEnvelope.request.intent.slots.method;
+        let recipe = Methods.getRecipe(method.value);
 
-        // todo: get data based on value and start the thing 
+        for (let index = 0; index < recipe.length; index++) {
+            await callDirectiveService(handlerInput, recipe[index].details);
+            await sleep(recipe[index].time);
+        }
 
         return handlerInput.responseBuilder
-            .speak(`You have selected ${method.value}. Good choice!`)
+            .speak(`Enjoy your ${method.value} coffee!`)
             .getResponse();
     },
 };
@@ -37,21 +42,60 @@ const ErrorHandler = {
         return true;
     },
     handle(handlerInput, error) {
-        console.log(`Error handled: ${error.message}`);
+        const request = handlerInput.requestEnvelope.request;
+
+        console.log(`Original Request was: ${JSON.stringify(request, null, 2)}`);
+        console.log(`Error handled: ${error}`);
 
         return handlerInput.responseBuilder
             .speak('Sorry, I can\'t understand the command. Please say again.')
             .getResponse();
     },
+};
 
-}
+const SessionEndedHandler = {
+    canHandle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'SessionEndedRequest';
+    },
+    handle(handlerInput) {
+        console.log(`Session ended with reason: ${handlerInput.requestEnvelope.request.reason}`);
+        return handlerInput.responseBuilder.getResponse();
+    },
+};
 
 const skillBuilder = Alexa.SkillBuilders.custom();
 
 exports.handler = skillBuilder
     .addRequestHandlers(
         LaunchRequestHandler,
-        BrewIntentHandler
+        BrewIntentHandler,
+        SessionEndedHandler
     )
     .addErrorHandlers(ErrorHandler)
+    .withApiClient(new Alexa.DefaultApiClient())
     .lambda();
+
+function callDirectiveService(handlerInput, message) {
+    const directiveServiceClient = handlerInput.serviceClientFactory.getDirectiveServiceClient();
+
+    const requestId = handlerInput.requestEnvelope.request.requestId;
+    const endpoint = handlerInput.requestEnvelope.context.System.apiEndpoint;
+    const token = handlerInput.requestEnvelope.context.System.apiAccessToken;
+
+    const directive = {
+        header: {
+            requestId,
+        },
+        directive: {
+            type: 'VoicePlayer.Speak',
+            speech: message,
+        },
+    };
+
+    return directiveServiceClient.enqueue(directive, endpoint, token);
+}
+
+function sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
