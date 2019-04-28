@@ -18,6 +18,7 @@
   "homepage": "https://github.com/SamHutchings/coffee-time#readme",
   "description": "",
   "dependencies": {
-    "ask-sdk": "^2.3.0"
+    "ask-sdk": "^2.3.0",
+    "aws-sdk": "^2.444.0"
   }
 }
