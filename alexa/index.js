@@ -1,5 +1,5 @@
 const Alexa = require('ask-sdk-core');
-const Methods = require('./methods');
+const Recipes = require('./recipe-service');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -24,11 +24,17 @@ const BrewIntentHandler = {
 
         console.log(`Brew request received for ${method.value}`);
 
-        let recipe = Methods.getRecipe(method.value);
+        let recipe = await Recipes.getRecipe(method.value);
 
-        for (let index = 0; index < recipe.length; index++) {
-            await callDirectiveService(handlerInput, recipe[index].details);
-            await sleep(recipe[index].time);
+        if (!recipe) {
+            console.log(`Could not find recipe ${method.value}`);
+        }
+
+        await callDirectiveService(handlerInput, recipe.setup);
+
+        for (let index = 0; index < recipe.method.length; index++) {
+            await callDirectiveService(handlerInput, recipe.method[index].details);
+            await sleep(recipe.method[index].time);
         }
 
         return handlerInput.responseBuilder
