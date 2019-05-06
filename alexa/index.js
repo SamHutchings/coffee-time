@@ -28,6 +28,10 @@ const BrewIntentHandler = {
 
         if (!recipe) {
             console.log(`Could not find recipe ${method.value}`);
+
+            return handlerInput.responseBuilder
+                .speak(`Sorry, we couldn't find a recipe for ${method.value}. Please try another method.`)
+                .getResponse();
         }
 
         await callDirectiveService(handlerInput, recipe.setup);
