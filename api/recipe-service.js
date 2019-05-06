@@ -1,14 +1,14 @@
 const AWS = require("aws-sdk");
 const uuidv1 = require("uuid/v1");
 
-AWS.config.update({ region: "eu-west-1" });
+AWS.config.update({ region: process.env.REGION || "eu-west-1" });
 
 const db = new AWS.DynamoDB.DocumentClient();
-const tableName = "coffee-recipes";
+const TABLE_NAME = "coffee-recipes";
 
 exports.listRecipes = function() {
   const params = {
-    TableName: tableName,
+    TableName: TABLE_NAME
   };
 
   return db.scan(params).promise();
@@ -16,7 +16,7 @@ exports.listRecipes = function() {
 
 exports.getRecipe = function(id) {
   const params = {
-    TableName: tableName,
+    TableName: TABLE_NAME,
     KeyConditionExpression: "id=:i",
     ExpressionAttributeValues: {
       ":i": id
@@ -28,7 +28,7 @@ exports.getRecipe = function(id) {
 
 exports.createRecipe = function(recipe) {
   const params = {
-    TableName: tableName,
+    TableName: TABLE_NAME,
     Item: {
       id: uuidv1(),
       ...recipe
@@ -38,13 +38,24 @@ exports.createRecipe = function(recipe) {
   return db.put(params).promise();
 };
 
-exports.updateRecipe = async function(recipe) {
+exports.updateRecipe = function(id, recipe) {
   const params = {
-    TableName: tableName,
+    TableName: TABLE_NAME,
+    Key: { id },
     Item: {
+      id,
       ...recipe
     }
   };
 
-  return db.update(params).promise();
+  return db.put(params).promise();
 };
+
+exports.deleteRecipe = function(id) {
+  const params = {
+    TableName: TABLE_NAME,
+    Key: { id }
+  };
+
+  return db.delete(params).promise();
+}
