@@ -1,0 +1,25 @@
+{
+  "name": "coffee-time-api",
+  "version": "1.0.0",
+  "description": "API endpoints for the coffee time alexa skill",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samhutchings/coffee-time.git"
+  },
+  "author": "Sam Hutchings",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/samhutchings/coffee-time/issues"
+  },
+  "homepage": "https://github.com/samhutchings/coffee-time#readme",
+  "dependencies": {
+    "aws-sdk": "^2.449.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.16.4"
+  }
+}
