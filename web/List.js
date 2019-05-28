@@ -1,5 +1,5 @@
-import React from "react";
-import ListItem from "./ListItem";
+import React from 'react';
+import ListItem from './ListItem';
 
 class List extends React.Component {
   constructor(props) {
@@ -10,26 +10,35 @@ class List extends React.Component {
       methods: []
     };
   }
+
   componentDidMount() {
-    fetch("http://localhost:3000/api/v1/recipes")
+    fetch('http://localhost:3000/api/v1/recipes')
       .then(res => res.json())
       .then(res => {
-        debugger;
         this.setState({
           isLoaded: true,
           methods: res
         });
       });
   }
+
   render() {
-    if (!this.state.isLoaded) {
+    const { isLoaded, methods } = this.state;
+
+    if (!isLoaded) {
       return <h1>Loading</h1>;
     }
     return (
       <React.Fragment>
-        {this.state.methods.map(x => {
-          return <ListItem name={x.recipeName} id={x.id} />;
-        })}
+        <table className="standard">
+          <thead>
+            <th>Name</th>
+            <th />
+          </thead>
+          <tbody>
+            {methods.map(x => <ListItem name={x.recipeName} id={x.id} />)}
+          </tbody>
+        </table>
       </React.Fragment>
     );
   }
