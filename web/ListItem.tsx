@@ -1,8 +1,13 @@
-import React from 'react';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import { Link } from '@reach/router';
-import PropTypes from 'prop-types';
 
-export const ListItem = (props) => {
+interface ListItemProps {
+  id: string,
+  name: string
+};
+
+export const ListItem = (props: ListItemProps) => {
   const { id, name } = props;
   return (
     <tr>

@@ -52,7 +52,6 @@ class Details extends React.Component {
   }
 
   handleSaveClick() {
-    debugger;
     const { name, setup, method, coffeeGramsPerCup } = this.state;
     const { id } = this.props;
 

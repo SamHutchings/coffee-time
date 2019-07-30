@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from '@reach/router';
 
-import List from './List';
+import List from './List.tsx';
 import Details from './Details';
 
 export const App = () => (

@@ -1,7 +1,17 @@
-import React from 'react';
+import * as React from 'react';
 import ListItem from './ListItem';
 
-class List extends React.Component {
+interface ListState {
+  isLoaded: boolean,
+  methods: Method[];
+};
+
+interface Method {
+  id: string,
+  recipeName: string
+};
+
+export default class List extends React.Component<{}, ListState> {
   constructor(props) {
     super(props);
 
@@ -43,5 +53,3 @@ class List extends React.Component {
     );
   }
 }
-
-export default List;
