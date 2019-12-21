@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/api/v1/recipes", (req, res) => {
+app.get("/api/v1/recipes", (_req, res) => {
   recipeService
     .listRecipes()
     .then(
