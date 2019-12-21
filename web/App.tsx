@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { Router } from '@reach/router';
 
-import List from './List.tsx';
-import Details from './Details';
+import List from './src/components/List';
+import Details from './src/components/Details';
 
 export const App = () => (
   <div>

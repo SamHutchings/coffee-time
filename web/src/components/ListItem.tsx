@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { Link } from '@reach/router';
 
+
 interface ListItemProps {
   id: string,
   name: string
@@ -10,7 +11,7 @@ interface ListItemProps {
 export const ListItem = (props: ListItemProps) => {
   const { id, name } = props;
   return (
-    <tr>
+    <tr key={id}>
       <td>{name}</td>
       <td><Link to={`/details/${id}`}>Edit</Link></td>
     </tr>

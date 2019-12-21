@@ -1,9 +1,26 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Redirect } from '@reach/router';
-import shortid from 'shortid';
+import * as React from 'react';
+import { Redirect, RouteComponentProps } from '@reach/router';
+import * as shortid from 'shortid';
 
-class Details extends React.Component {
+interface Props {
+  id: string;
+}
+
+interface State {
+  name: string;
+  setup: string;
+  method: MethodItem[];
+  coffeeGramsPerCup?: number;
+  saveSuccess: boolean | null;
+  isLoaded: boolean;
+}
+
+interface MethodItem {
+  details: string;
+  time: number;
+}
+
+class Details extends React.Component<Props & RouteComponentProps, State> {
   constructor(props) {
     super(props);
 
@@ -11,10 +28,10 @@ class Details extends React.Component {
       name: '',
       setup: '',
       method: [],
-      coffeeGramsPerCup: null,
       saveSuccess: null,
       isLoaded: false,
     };
+
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCoffeeGramsPerCupChange = this.handleCoffeeGramsPerCupChange.bind(this);
     this.handleSetupChange = this.handleSetupChange.bind(this);
@@ -55,13 +72,18 @@ class Details extends React.Component {
     const { name, setup, method, coffeeGramsPerCup } = this.state;
     const { id } = this.props;
 
+    debugger;
     const data = { recipeName: name, setup, method, coffeeGramsPerCup };
 
-    fetch(`http://localhost.:3000/api/v1/recipes/${id}`, {
+    fetch(`http://localhost:3000/api/v1/recipes/${id}`, {
       method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(data)
     })
-      .then(this.setState({ saveSuccess: true }))
+      .then(() => this.setState({ saveSuccess: true }))
       .catch(err => {
         console.log(err);
         this.setState({ saveSuccess: false });
@@ -87,7 +109,7 @@ class Details extends React.Component {
 
     return (
       <div className="recipe-details">
-      {this.renderRedirect()}
+        {this.renderRedirect()}
 
         <label htmlFor="name">
           Name
@@ -115,9 +137,5 @@ class Details extends React.Component {
     );
   }
 }
-
-Details.propTypes = {
-  id: PropTypes.string,
-};
 
 export default Details;

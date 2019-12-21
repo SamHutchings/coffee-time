@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RouteComponentProps } from '@reach/router';
 import ListItem from './ListItem';
 
 interface ListState {
@@ -11,7 +12,7 @@ interface Method {
   recipeName: string
 };
 
-export default class List extends React.Component<{}, ListState> {
+export default class List extends React.Component<RouteComponentProps, ListState> {
   constructor(props) {
     super(props);
 
@@ -46,7 +47,7 @@ export default class List extends React.Component<{}, ListState> {
             <th />
           </thead>
           <tbody>
-            {methods.map(x => <ListItem name={x.recipeName} id={x.id} />)}
+            {methods.map(x => <ListItem name={x.recipeName} id={x.id} key={x.id} />)}
           </tbody>
         </table>
       </React.Fragment>
